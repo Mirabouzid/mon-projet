@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 export default function ForgotPassword() {
 
@@ -9,6 +11,24 @@ export default function ForgotPassword() {
 
     function onchange(e) {
         setEmail(e.target.value);
+    }
+    async function onSubmit(e) {
+        e.preventDefault()
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+
+        try {
+            const auth = getAuth()
+            await sendPasswordResetEmail(auth, email)
+            toast.success('Email was sent');
+
+        } catch (error) {
+            toast.error('Could not send reset password')
+        }
+
     }
 
     return (
@@ -21,7 +41,7 @@ export default function ForgotPassword() {
                         className='w-full rounded-2xl' />
                 </div>
                 <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-                    <form >
+                    <form onSubmit={onSubmit}>
                         <input type="email" id='email'
                             value={email} onChange={onchange}
                             placeholder='Email address'

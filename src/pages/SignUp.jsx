@@ -39,13 +39,14 @@ export default function SignUp() {
             formDataCopy.timestamp = serverTimestamp();
             delete formDataCopy.password;
             await setDoc(doc(db, "users", user.uid), formDataCopy)
-            // toast.success('Sign up was successful')
-            // navigate('/');
+            toast.success('Sign up was successful')
+            navigate('/');
 
             console.log(userCredential.user);
 
         } catch (error) {
             toast.error('Something went wrong with the registration ')
+            // toast.error("Erreur : " + error.message)
 
         }
     }
@@ -75,7 +76,7 @@ export default function SignUp() {
                         />
                         <div className='relative mb-6'>
                             <input type={showPassword ? "text" : "password"}
-                                id='password'
+                                name='password'
                                 value={password} onChange={onchange}
                                 placeholder='Password'
                                 className='w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out'
