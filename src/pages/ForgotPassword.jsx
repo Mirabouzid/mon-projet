@@ -29,6 +29,7 @@ export default function ForgotPassword() {
             toast.error('Could not send reset password')
         }
 
+
     }
 
     return (
@@ -51,7 +52,7 @@ export default function ForgotPassword() {
 
                         <div className='flex justify-between whitespace-nowrap text-sm sm:text-lg'>
                             <p className='mb-6 '>Don't have a account?
-                                <Link to='/Sign-out' className='text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1'>Register</Link></p>
+                                <Link to='/sign-out' className='text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1'>Register</Link></p>
                             <p>
                                 <Link to='/sign-in' className='text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out'>Sign in instead</Link>
                             </p>
