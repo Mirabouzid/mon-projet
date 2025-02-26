@@ -10,6 +10,10 @@ import Header from "./components/Header";
 import { ToastContainer, Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ListingCreate from "./pages/ListingCreate";
+import EditListing from "./pages/EditListing";
+
+
+
 
 
 
@@ -20,13 +24,21 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route element={<PrivateRoute />} />
-          <Route path="/profile" element={<Profile />} />
+
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-out" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/offers" element={<Offers />} />
-          <Route path="/create-listing" element={<ListingCreate />} />
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/create-listing" element={<ListingCreate />} />
+            <Route path="/edit-listing/:listingId" element={<EditListing />} />
+
+          </Route>
+
+
+
 
 
         </Routes>

@@ -3,19 +3,24 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { db } from '../firebase';
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { FcHome } from "react-icons/fc";
+import ListingItem from '../components/ListingItem';
 
 
 export default function Profile() {
     const auth = getAuth()
-
     const navigate = useNavigate()
+
     const [changeDetail, setChangeDetail] = useState(false)
+    const [listings, setListings] = useState([])
+    const [loading, setLoading] = useState(true)
     const [formData, setFormData] = useState({
         name: '',
         email: ''
     })
+
+
 
     function onLogout() {
         auth.signOut()
@@ -47,6 +52,35 @@ export default function Profile() {
         return () => unsubscribe()
     }, [navigate, auth])
 
+    useEffect(() => {
+        async function fetchUserListings() {
+            try {
+                if (!auth.currentUser?.uid) return
+                setLoading(true)
+
+                const listingRef = collection(db, "listings")
+                const q = query(
+                    listingRef,
+                    where("userRef", "==", auth.currentUser.uid),
+                    orderBy("timestamp", "desc")
+                )
+
+                const querySnap = await getDocs(q)
+                const listingsData = querySnap.docs.map(doc => ({
+                    id: doc.id,
+                    data: doc.data()
+                }))
+
+                setListings(listingsData)
+            } catch (error) {
+                toast.error("Failed to load listings")
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchUserListings()
+    }, [auth.currentUser?.uid]) // Dépendance sécurisée
+
     if (!auth.currentUser) {
         return <div>Loading...</div>
     }
@@ -70,6 +104,18 @@ export default function Profile() {
         }
 
     }
+    async function onDelete(listingID) {
+        if (window.confirm("Are you sure you want to delete ?")) {
+            await deleteDoc(doc(db, "listings", listingID))
+            const updatedListings = listings.filter((listing) => listing.id !== listingID);
+            setListings(updatedListings);
+            toast.success("Successfully deleted the listing")
+        }
+    }
+    function onEdit(listingID) {
+        navigate(`/edit-listing/${listingID}`)
+    }
+
 
     return (
         <>
@@ -119,6 +165,21 @@ export default function Profile() {
                     </button>
                 </div>
             </section>
+            <div className='max-w-6xl px-3 mt-6 mx-auto'>
+                {!loading && listings.length > 0 && (
+                    <>
+                        <h2 className='text-2xl text-center font-semibold mb-6'>My Listings</h2>
+                        <ul className='sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5'>
+                            {listings.map((listing) => (
+                                <ListingItem key={listing.id} id={listing.id} listing={listing.data}
+                                    onDelete={() => onDelete(listing.id)}
+                                    onEdit={() => onEdit(listing.id)}
+                                />
+                            ))}
+                        </ul>
+                    </>
+                )}
+            </div>
         </>
     )
 }
