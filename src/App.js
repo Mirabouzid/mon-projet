@@ -11,6 +11,7 @@ import { ToastContainer, Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ListingCreate from "./pages/ListingCreate";
 import EditListing from "./pages/EditListing";
+import Listing from "./pages/Listing";
 
 
 
@@ -29,6 +30,8 @@ function App() {
           <Route path="/sign-out" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/offers" element={<Offers />} />
+          <Route path="/category/:categoryName/:listingId" element={<Listing />} />
+
 
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />

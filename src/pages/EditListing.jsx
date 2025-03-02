@@ -8,7 +8,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 
 
-export default function ListingCreate() {
+export default function EditListing() {
     const Navigate = useNavigate();
     const auth = getAuth();
     const [geolocationEnabled] = useState(false);
