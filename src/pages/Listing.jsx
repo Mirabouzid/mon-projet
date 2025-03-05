@@ -125,7 +125,7 @@ export default function Listing() {
                         </div>
                     )}
                     {ContactLandlord && (
-                        <Contact />
+                        <Contact userRef={listing.userRef} listing={listing} />
                     )}
 
                 </div>

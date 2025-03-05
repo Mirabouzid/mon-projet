@@ -4,18 +4,20 @@ import { collection, doc, getDocs, limit, orderBy, query, startAfter, where } fr
 import { db } from '../firebase'
 import Spinner from '../components/Spinner'
 import ListingItem from '../components/ListingItem'
+import { useParams } from 'react-router'
 
 
-export default function Offers() {
+export default function Category() {
     const [listings, setListings] = useState(null)
     const [loading, setLoading] = useState(true)
     const [lastFetchListing, setLastFetchListing] = useState(null)
+    const params = useParams()
 
     useEffect(() => {
         async function fetchListings() {
             try {
                 const listingRef = collection(db, "listings")
-                const q = query(listingRef, where('offer', "==", true), orderBy('timestamp', 'desc'), limit(8));
+                const q = query(listingRef, where('type', "==", params.categoryName), orderBy('timestamp', 'desc'), limit(8));
                 const querySnap = await getDocs(q)
                 const lastVisible = querySnap.docs[querySnap.docs.length - 1]
                 setLastFetchListing(lastVisible)
@@ -33,12 +35,12 @@ export default function Offers() {
             }
         }
         fetchListings();
-    }, [])
+    }, [params.categoryName])
 
     async function onFetchMoreListings() {
         try {
             const listingRef = collection(db, "listings")
-            const q = query(listingRef, where('offer', "==", true), orderBy('timestamp', 'desc'),
+            const q = query(listingRef, where('type', "==", params.categoryName), orderBy('timestamp', 'desc'),
                 startAfter(lastFetchListing),
                 limit(4));
 
@@ -61,7 +63,8 @@ export default function Offers() {
 
     return (
         <div className='max-w-6xl mx-auto px-3'>
-            <h1 className='text-3xl text-center mt-6 font-bold mb-6'>Offers</h1>
+            <h1 className='text-3xl text-center mt-6 font-bold mb-6'>
+                {params.categoryName === "rent" ? "Places for rent" : "Places for sale"}</h1>
             {loading ? (
                 <Spinner />
             ) : listings && listings.length > 0 ? (

@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import ListingCreate from "./pages/ListingCreate";
 import EditListing from "./pages/EditListing";
 import Listing from "./pages/Listing";
+import Contact from "./components/Contact";
+import Category from "./pages/Category";
 
 
 
@@ -30,7 +32,9 @@ function App() {
           <Route path="/sign-out" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/offers" element={<Offers />} />
+          <Route path="/category/:categoryName" element={<Category />} />
           <Route path="/category/:categoryName/:listingId" element={<Listing />} />
+          <Route path="/contact" element={<Contact />} />
 
 
           <Route element={<PrivateRoute />}>
