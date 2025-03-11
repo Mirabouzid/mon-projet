@@ -163,7 +163,6 @@ export default function ListingCreate() {
             delete formDataCopy.latitude;
             delete formDataCopy.longitude;
 
-
             // Envoyer les données à Firebase
             const docRef = await addDoc(collection(db, "listings"), formDataCopy);
             console.log("Document written with ID:", docRef.id);
