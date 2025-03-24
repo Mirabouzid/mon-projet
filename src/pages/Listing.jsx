@@ -14,6 +14,7 @@ import { FaShare, FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair } from "reac
 import { getAuth } from 'firebase/auth';
 import Contact from '../components/Contact';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Dialog } from '@headlessui/react';
 
 
 
@@ -26,6 +27,7 @@ export default function Listing() {
     const [loading, setLoading] = useState(true);
     const [shareLinkCopied, setShareLinkCopied] = useState(false)
     const [ContactLandlord, setContactLandlord] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     useEffect(() => {
@@ -119,6 +121,43 @@ export default function Listing() {
                             {listing.furnished ? "Furnished" : "Not furnished"}
                         </li>
                     </ul>
+
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="mt-4 text-blue-600 hover:underline font-semibold"
+                    >
+
+                        About this accommodation
+                    </button>
+
+                    {/* Modale */}
+                    <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
+                        {/* Overlay */}
+                        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+                        <div className="fixed inset-0 flex items-center justify-center p-4">
+                            <div className="w-full max-w-lg md:max-w-3xl bg-white rounded-lg shadow-lg p-6">
+                                <Dialog.Title className="text-xl md:text-2xl font-bold mb-4">
+                                    Detailed description
+                                </Dialog.Title>
+
+                                <div className="max-h-[60vh] overflow-y-auto text-sm md:text-base">
+                                    {listing.detailedDescription}
+                                </div>
+
+                                <div className="mt-4 flex justify-end">
+                                    <button
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm md:text-base"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </Dialog>
+
+
                     {listing.userRef !== auth.currentUser?.uid && !ContactLandlord && (
                         <div className='mt-6 '>
                             <button onClick={() => setContactLandlord(true)} className='px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out'>Contact Landlord</button>
@@ -146,7 +185,13 @@ export default function Listing() {
                     </MapContainer>
 
                 </div>
+
+
+
+
             </div>
+
+
         </main>
     )
 }

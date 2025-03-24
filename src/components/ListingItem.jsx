@@ -2,8 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { MdLocationOn } from "react-icons/md";
 import moment from 'moment';
-import { MdDelete } from "react-icons/md";
-import { MdModeEdit } from "react-icons/md";
+import { MdDelete, MdModeEdit } from "react-icons/md";
+import ClickRating from './ClickRating';
+
+
 
 export default function ListingItem({ listing, id, onEdit, onDelete }) {
 
@@ -50,6 +52,11 @@ export default function ListingItem({ listing, id, onEdit, onDelete }) {
                                 <p className='text-xs font-bold '>{listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : "1 Baths"}</p>
                             </div>
                         </div>
+                        <div className="mt-3">
+                            < ClickRating />
+                        </div>
+
+
                     </div>
 
                 </div>

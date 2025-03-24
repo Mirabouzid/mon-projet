@@ -14,6 +14,11 @@ import EditListing from "./pages/EditListing";
 import Listing from "./pages/Listing";
 import Contact from "./components/Contact";
 import Category from "./pages/Category";
+import TopBar from "./components/TopBar";
+import Dashboard from "./pages/Dashboard";
+import Calendar from "./pages/Calendar";
+import BarChart from "./pages/BarChart";
+import ChartPie from "./pages/ChartPie";
 
 
 
@@ -38,16 +43,21 @@ function App() {
 
 
           <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/bar" element={<BarChart />} />
+            <Route path="/pie" element={<ChartPie />} />
+
+
+
+            {/* <Route path="contacts" element={<Contacts />} /> */}
+
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-listing" element={<ListingCreate />} />
             <Route path="/edit-listing/:listingId" element={<EditListing />} />
 
+
           </Route>
-
-
-
-
-
         </Routes>
       </Router>
       <ToastContainer

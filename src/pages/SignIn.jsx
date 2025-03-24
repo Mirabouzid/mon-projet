@@ -4,6 +4,8 @@ import { Link, useNavigate, } from 'react-router-dom';
 import OAuth from '../components/OAuth';
 import { toast } from 'react-toastify';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import Lottie from "lottie-react";
+import LoginLottie from '../assets/img/picture.json'
 
 
 export default function SignIn() {
@@ -44,8 +46,10 @@ export default function SignIn() {
             <div className='flex justify-center flex-wrap items-center px-6 py-12 max-w-6xl mx-auto'>
 
                 <div className='md:w-[67%] lg:w-[50%] mb-12 md:mb-6 '>
-                    <img src="https://images.unsplash.com/flagged/photo-1564767609342-620cb19b2357?q=80&w=1373&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="key"
-                        className='w-full rounded-2xl' />
+                    <Lottie animationData={LoginLottie} loop={true} className='w-full' />
+
+                    {/* <img src="https://images.unsplash.com/flagged/photo-1564767609342-620cb19b2357?q=80&w=1373&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="key"
+                        className='w-full rounded-2xl' /> */}
                 </div>
                 <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
                     <form onSubmit={onSubmit}>

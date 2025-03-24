@@ -1,22 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import logo from '../assets/img/logo-site.png'
 
 export default function Header() {
     const [pageState, setPageState] = useState("Sign in")
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
     const location = useLocation();
     const navigate = useNavigate()
     const auth = getAuth();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setPageState("Profile")
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists() && userDocSnap.data().role === 'admin') {
+                    setIsAdmin(true);
+                    setPageState("Admin");
+                } else {
+                    setIsAdmin(false)
+                    setPageState("Profile")
+                }
             } else {
                 setPageState("Sign in")
+                setIsAdmin(false)
             }
-        })
+        });
+
         return () => unsubscribe()
     }, [auth])
 
@@ -34,8 +49,8 @@ export default function Header() {
 
             <header className='flex justify-between items-center px-4 md:px-3 max-w-6xl mx-auto'>
                 <div className=' pl-2 md:pl-8'>
-                    <img src="https://static.rdc.moveaws.com/images/logos/rdc-logo-default.svg" alt="logo"
-                        className='h-5 cursor-pointer'
+                    <img src={logo} alt="logo"
+                        className='w-full h-14 object-contain cursor-pointer'
                         onClick={() => navigate("/")} />
 
                 </div>
@@ -63,9 +78,20 @@ export default function Header() {
 
                         >
                             {pageState}
+
                         </li>
+
+                        {isAdmin && (
+                            <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent  transition duration-300
+                            ${pathMatchRoute("/dashboard") ? "text-red-600"
+                                    : "hover:border-b-red-500 hover:text-black"
+                                }`}
+                                onClick={() => navigate("/dashboard")}
+                            >Dashboard</li>
+                        )}
                     </ul>
                 </div>
+
                 {/*menu mobile*/}
                 <div className='md:hidden pr-2'>
                     <button onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -110,6 +136,18 @@ export default function Header() {
 
                             </li>
 
+                            {isAdmin && (
+                                <li className={`px-4 py-3 text-sm font-semibold border-b cursor-pointer
+                            ${pathMatchRoute("/dashboard") ? "text-black bg-gray-50" : "text-gray-400"
+                                    }`}
+                                    onClick={() => {
+                                        navigate("/dashboard")
+                                        setIsMenuOpen(false);
+                                    }}
+                                >  Dashboard
+                                </li>
+
+                            )}
                         </ul>
 
                     </div>

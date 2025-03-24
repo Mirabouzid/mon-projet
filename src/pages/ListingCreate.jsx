@@ -24,11 +24,13 @@ export default function ListingCreate() {
         furnished: false,
         address: "",
         description: "",
+        detailedDescription: "",
         offer: false,
         regularPrice: 0,
         discountedPrice: 0,
         latitude: 0,
         longitude: 0,
+
         images: []
     });
     const { type, name, bedrooms, bathrooms, parking, furnished, address, description, offer, regularPrice, discountedPrice, latitude, longitude, images } = formData
@@ -82,6 +84,12 @@ export default function ListingCreate() {
     async function onSubmit(e) {
         e.preventDefault();
         setLoading(true);
+
+        if (!formData.detailedDescription?.trim()) {
+            toast.error("La description détaillée est obligatoire");
+            setLoading(false);
+            return;
+        }
 
 
         if (+discountedPrice >= +regularPrice) {
@@ -149,6 +157,7 @@ export default function ListingCreate() {
 
             const formDataCopy = {
                 ...formData,
+                detailedDescription: formData.detailedDescription || "Description non fournie",
                 imgUrls,
                 geolocation,
                 locationFormatted,
@@ -312,6 +321,7 @@ export default function ListingCreate() {
                     className='w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6 ' />
 
 
+
                 <p className='text-lg font-semibold'>Offer</p>
 
                 <div className='flex mb-6'>
@@ -372,7 +382,25 @@ export default function ListingCreate() {
                         className='w-full px-3 py-1.5 text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:border-slate-600' />
 
                 </div>
+                <div className="mt-8 border-t pt-6">
+                    <h3 className="text-2xl font-bold mb-4">Detailed Description</h3>
+                    <textarea
+                        id="detailedDescription"
+                        value={formData.detailedDescription}
+                        onChange={onChange}
+                        placeholder="Describe your property in detail..."
+                        className="w-full p-4 text-lg border rounded-lg min-h-[200px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                    />
+                    <p className="mt-2 text-sm text-gray-500">
+                        Provide a complete description with special features and details
+                    </p>
+                </div>
+                <br />
+
                 <button type="submit" className='mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'> Create Listing</button>
+
+
 
             </form>
         </main>
